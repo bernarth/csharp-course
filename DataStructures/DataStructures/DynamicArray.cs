@@ -38,10 +38,7 @@
 
         public void InsertAt(int index, T item)
         {
-            if (index < 0 || index > _count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
+            ValidateIndex(index);
 
             EnsureCapacity();
 
