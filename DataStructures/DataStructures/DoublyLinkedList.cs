@@ -21,6 +21,7 @@ namespace DataStructures
         private Node? _tail;
         private int _count;
 
+        public int Count => _count;
         public void AddFirst(T value)
         {
             var newNode = new Node(value);
@@ -37,6 +38,7 @@ namespace DataStructures
             }
 
             _count++;
+
         }
 
         public void AddLast(T value)
@@ -97,7 +99,21 @@ namespace DataStructures
         // TODO: Modify using _tail
         public bool Contains(T value)
         {
-            var current = _head;
+            //var current = _head;
+
+            //while (current != null)
+            //{
+            //    if (current.Value.Equals(value))
+            //    {
+            //        return true;
+            //    }
+
+            //    current = current.Next;
+            //}
+
+            //return false;
+
+            var current = _tail;
 
             while (current != null)
             {
@@ -106,25 +122,41 @@ namespace DataStructures
                     return true;
                 }
 
-                current = current.Next;
-            }
+                current = current.Prev;
 
+            }
             return false;
+
+
         }
 
         // TODO: Modify using _tail
         public T Get(int index)
         {
+            //if (index < 0 || index >= _count)
+            //{
+            //    throw new ArgumentOutOfRangeException(nameof(index));
+            //}
+
+            //var current = _head;
+
+            //for (int i = 0; i < index; i++)
+            //{
+            //    current = current!.Next;
+            //}
+
+            //return current!.Value;
+
             if (index < 0 || index >= _count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            var current = _head;
+            var current = _tail;
 
             for (int i = 0; i < index; i++)
             {
-                current = current!.Next;
+                current = current!.Prev;
             }
 
             return current!.Value;
@@ -135,6 +167,13 @@ namespace DataStructures
         {
             var result = new T[_count];
             // Turn to array the linked list
+            var current = _head;
+
+            for (int i = 0; i < _count; i++)
+            {
+                result[i] = current!.Value;
+                current = current.Next;
+            }
 
             return result;
         }
@@ -144,6 +183,13 @@ namespace DataStructures
         {
             var result = new T[_count];
             // Turn to array the linked list but start from the tail
+            var current = _tail;
+
+            for (int i = 0; i < _count; i++)
+            {
+                result[i] = current!.Value;
+                current = current.Prev;
+            }
 
             return result;
         }

@@ -19,14 +19,16 @@ namespace Test.DataStructures
             Assert.Equal(30, dynamicArray.Get(2));
         }
 
-        [Fact]
-        public void Get_ShouldThrow_WhenIndexOutOfBound()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(1)]
+        public void Get_ShouldThrow_WhenIndexOutOfBound(int index)
         {
             var dynamicArray = new DynamicArray<string>(10);
             dynamicArray.Add("hello");
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.Get(-1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.Get(1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.Get(index));
+
         }
 
         [Fact]
@@ -58,15 +60,17 @@ namespace Test.DataStructures
             Assert.Equal("Jessica", dynamicArray.Get(2));
         }
 
-        [Fact]
-        public void InsertAt_ShouldThrow_WhenOutOfRange()
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(3)]
+        public void InsertAt_ShouldThrow_WhenOutOfRange(int index)
         {
             var dynamicArray = new DynamicArray<int>();
             dynamicArray.Add(1);
             dynamicArray.Add(2);
 
-            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.InsertAt(-1, 23));
-            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.InsertAt(3, 23));
+            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.InsertAt(index, 23));
+
         }
 
         [Theory]
@@ -80,5 +84,103 @@ namespace Test.DataStructures
 
             Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.RemoveAt(index));
         }
+
+        [Fact]
+        public void NewDynamicArray_ShouldHaveDefaultCapacityOf10()
+        {
+            var dynamicArray = new DynamicArray<int>();
+
+            Assert.Equal(10, dynamicArray.Capacity);
+
+        }
+
+        [Fact]
+        public void Add_ShouldIncreaseCapacityBy2WhenRequired()
+        {
+            var dynamicArray = new DynamicArray<int>(2);
+            dynamicArray.Add(25);
+            dynamicArray.Add(55);
+            var oldCapacity = dynamicArray.Capacity;
+
+            dynamicArray.Add(65);
+            var newCapacity = dynamicArray.Capacity;
+
+            Assert.True(newCapacity == oldCapacity * 2);
+            Assert.True(oldCapacity < newCapacity);
+
+        }
+
+        [Fact]
+        public void Set_ShouldMaintainCapacity()
+        {
+            var dynamicArray = new DynamicArray<int>(2);
+            dynamicArray.Add(25);
+            dynamicArray.Add(55);
+            var oldCapacity = dynamicArray.Capacity;
+
+            dynamicArray.Set(1, 6);
+            var newCapacity = dynamicArray.Capacity;
+
+            Assert.Equal(oldCapacity, newCapacity);
+
+        }
+
+        [Fact]
+        public void InsertAt_AboveCurrentCapacity_ShouldIncreaseCapacity()
+        {
+            var dynamicArray = new DynamicArray<string>(1);
+            dynamicArray.Add("test");
+            var oldCapacity = dynamicArray.Capacity;
+
+            dynamicArray.InsertAt(0, "newTest");
+            var newCapacity = dynamicArray.Capacity;
+
+            Assert.True(oldCapacity < newCapacity);
+
+        }
+
+        [Fact]
+        public void InsertAt_ShouldThrowExceptionWithNegativeIndex()
+        {
+            var dynamicArray = new DynamicArray<string>(1);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.InsertAt(-1, "newTest"));
+
+        }
+
+        [Fact]
+        public void InsertAt_ShouldThrowExceptionWhenIndexGreaterThanCount()
+        {
+            var dynamicArray = new DynamicArray<string>(1);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.InsertAt(3, "newTest"));
+
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(5)]
+        [InlineData(12)]
+
+        public void InsertAt_ShouldThrowExceptionWithInvalidIndexes(int index)
+        {
+            var dynamicArray = new DynamicArray<string>(1);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.InsertAt(index, "newTest"));
+
+        }
+
+        [Theory]
+        [InlineData(-5)]
+        [InlineData(3)]
+
+        public void RemoveAt_ShouldThrowExceptionWithInvalidIndexes(int index)
+        {
+            var dynamicArray = new DynamicArray<string>(1);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => dynamicArray.RemoveAt(index));
+
+        }
+
     }
 }
